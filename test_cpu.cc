@@ -31,30 +31,48 @@ int main()
     std::cout << "mnist test number: " << dataset.test_labels.cols() << std::endl;
     // dnn
     Network dnn;
+    
+    // Layer 1:
     Layer *conv1 = new Conv(1, 28, 28, 6, 5, 5);
-    Layer *pool1 = new MaxPooling(6, 24, 24, 2, 2, 2);
-    Layer *conv2 = new Conv(6, 12, 12, 16, 5, 5);
-    Layer *pool2 = new MaxPooling(16, 8, 8, 2, 2, 2);
-    Layer *fc1 = new FullyConnected(pool2->output_dim(), 120);
-    Layer *fc2 = new FullyConnected(120, 84);
-    Layer *fc3 = new FullyConnected(84, 10);
     Layer *relu_conv1 = new ReLU;
-    Layer *relu_conv2 = new ReLU;
-    Layer *relu_fc1 = new ReLU;
-    Layer *relu_fc2 = new ReLU;
-    Layer *softmax = new Softmax;
     dnn.add_layer(conv1);
     dnn.add_layer(relu_conv1);
+
+    // Layer 2:
+    Layer *pool1 = new MaxPooling(6, 24, 24, 2, 2, 2);
     dnn.add_layer(pool1);
+
+    // Layer 3:
+    Layer *conv2 = new Conv(6, 12, 12, 16, 5, 5);
+    Layer *relu_conv2 = new ReLU;
     dnn.add_layer(conv2);
     dnn.add_layer(relu_conv2);
+    
+    // Layer 4:
+    Layer *pool2 = new MaxPooling(16, 8, 8, 2, 2, 2);
     dnn.add_layer(pool2);
+
+    // Layer 5:
+    // Not explicitly defined as a layer but it is inherently performed when transitioning from a convolutional/pooling layer to a fully connected layer.
+
+    // Layer 6:
+    Layer *fc1 = new FullyConnected(pool2->output_dim(), 120);
+    Layer *relu_fc1 = new ReLU;
     dnn.add_layer(fc1);
     dnn.add_layer(relu_fc1);
+
+    // Layer 7:
+    Layer *fc2 = new FullyConnected(120, 84);
+    Layer *relu_fc2 = new ReLU;
     dnn.add_layer(fc2);
     dnn.add_layer(relu_fc2);
+
+    // Layer 8:
+    Layer *fc3 = new FullyConnected(84, 10);
+    Layer *softmax = new Softmax;
     dnn.add_layer(fc3);
     dnn.add_layer(softmax);
+
     // loss
     Loss *loss = new CrossEntropy;
     dnn.add_loss(loss);
