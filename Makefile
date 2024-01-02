@@ -26,16 +26,19 @@ test_gpu: test_gpu.o
 test_gpu1: test_gpu
 		./test_gpu
 ############################################################################
+test_gpu_cus.o: test_gpu_cus.cc
+	nvcc --compile test_gpu_cus.cc -I./ -L/usr/local/cuda/lib64 -lcudart
 
+test_gpu_cus: test_gpu_cus.o
+	nvcc -o test_gpu_cus -lm -lcuda -lrt test_gpu_cus.o src/network.o src/mnist.o src/layer/*.o src/loss/*.o src/optimizer/*.o src/layer/custom/*.o -I./ -L/usr/local/cuda/lib64 -lcudart
 
-main: main.o custom
-	nvcc -o main -lm -lcuda -lrt main.o dnnNetwork.o src/network.o src/mnist.o src/layer/*.o src/loss/*.o src/optimizer/*.o -I./ -L/usr/local/cuda/lib64 -lcudart
-
-main.o: main.cc
-	nvcc --compile main.cc -I./ -L/usr/local/cuda/lib64 -lcudart
-
-dnnNetwork.o: dnnNetwork.cc
-	nvcc --compile dnnNetwork.cc -I./ -L/usr/local/cuda/lib64 -lcudart
+test_gpu2: test_gpu_cus
+		./test_gpu_cus
+custom2: src/layer/custom/gpu-utils.cu src/layer/custom/gpu-new-forward.cu src/layer/custom/gpu-new-forward-cus.cu
+	nvcc --compile src/layer/custom/gpu-utils.cu -o src/layer/custom/gpu-utils.o -I./ -L/usr/local/cuda/lib64 -lcudart
+#	nvcc --compile src/layer/custom/gpu-new-forward.cu -o src/layer/custom/gpu-new-forward.o -I./ -L/usr/local/cuda/lib64 -lcudart
+	nvcc --compile src/layer/custom/gpu-new-forward-cus.cu -o src/layer/custom/gpu-new-forward-cus.o -I./ -L/usr/local/cuda/lib64 -lcudart
+###########################################################################
 
 network.o: src/network.cc
 	nvcc --compile src/network.cc -o src/network.o -I./ -L/usr/local/cuda/lib64 -lcudart
@@ -68,6 +71,7 @@ optimizer: src/optimizer/sgd.cc
 clean:
 	rm -f train_cpu test_cpu
 	rm -f test_gpu1
+	rm -f test_gpu2
 
 clean_o:
 	rm -f *.o src/*.o src/layer/*.o src/loss/*.o src/optimizer/*.o src/layer/custom/*.o

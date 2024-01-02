@@ -1,6 +1,7 @@
 #include <Eigen/Dense>
 #include <algorithm>
 #include <iostream>
+#include <chrono> 
 
 #include "src/layer.h"
 #include "src/layer/conv.h"
@@ -61,8 +62,17 @@ int main()
     // Load parameters
     dnn.load_parameters("./model/weights-cpu-trained.bin");
 
+    // start timer
+    auto start_time = std::chrono::high_resolution_clock::now();
+
     // test accuracy
     dnn.forward(dataset.test_data);
+
+    // stop timer
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    std::cout << "Forward pass time: " << duration.count() << " microseconds" << std::endl;
+
     float accuracy = compute_accuracy(dnn.output(), dataset.test_labels);
     std::cout << "test accuracy: " << accuracy << std::endl;
 
