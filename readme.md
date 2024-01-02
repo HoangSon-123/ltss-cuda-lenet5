@@ -5,25 +5,30 @@
 
 Linux
 ```shell
-git clone https://github.com/ntp-shin/Cuda-Lenet5
-cd Cuda-Lenet5
+cd ltss-cuda-lenet5
 make setup
 make run
 ```
 
-Train LeNet5 with Colab (HOST):
+Train LeNet5 with Colab:
 ```shell
-!git clone https://github.com/ntp-shin/Cuda-Lenet5
-!cd Cuda-Lenet5 && make clean && make clean_o
-!cd Cuda-Lenet5 && make setup
-!cd Cuda-Lenet5 && make run
+!cd ltss-cuda-lenet5&& make clean && make clean_o
+!cd ltss-cuda-lenet5 && make setup
+!cd ltss-cuda-lenet5 && make run
 ```
 
-Test LeNet5 with Colab (HOST):
+Test LeNet5 with Colab (CPU):
 ```shell
-!git clone https://github.com/ntp-shin/Cuda-Lenet5
-!cd Cuda-Lenet5 && make clean && make clean_o
-!cd Cuda-Lenet5 && make setup
-!cd Cuda-Lenet5 && make test
+!cd ltss-cuda-lenet5 && make clean && make clean_o
+!cd ltss-cuda-lenet5 && make setup
+!cd ltss-cuda-lenet5 && make custom
+!cd ltss-cuda-lenet5 && make test
 ```
-Download: mode/*
+
+Test LeNet5 with Colab (GPU):
+```shell
+!cd ltss-cuda-lenet5 && make clean && make clean_o
+!cd ltss-cuda-lenet5 && make setup
+!cd ltss-cuda-lenet5 && make custom
+!cd ltss-cuda-lenet5 && make test_gpu1
+```
