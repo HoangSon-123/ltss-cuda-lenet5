@@ -59,11 +59,13 @@ int main()
     Loss *loss = new CrossEntropy;
     dnn.add_loss(loss);
 
+    // Load parameters
+    dnn.load_parameters("./model/weights-cpu-trained.bin");
+
     // start timer
     auto start_time = std::chrono::high_resolution_clock::now();
 
-    // Load parameters
-    dnn.load_parameters("./model/weights-cpu-trained.bin");
+    dnn.forward(dataset.test_data);
 
     // stop timer
     auto end_time = std::chrono::high_resolution_clock::now();
@@ -71,7 +73,6 @@ int main()
     std::cout << "Forward pass time: " << duration.count() << " microseconds" << std::endl;
 
     // test accuracy
-    dnn.forward(dataset.test_data);
     float accuracy = compute_accuracy(dnn.output(), dataset.test_labels);
     std::cout << "test accuracy: " << accuracy << std::endl;
 
